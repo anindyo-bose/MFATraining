@@ -23,14 +23,41 @@ framework -> react
 language -> typescript
 css ->  Tailwind
 
-
+//routing lib
 npm install react-router-dom
 
 
 //layout
+
+//header
+export default function  Header(){
+    return(<header className="flex justify-between align-middle p-4 bg-blue-500 text-white w-100">
+        <h1>
+            <a href="/">
+                <h1>
+                    Click & Cook
+                </h1>
+            </a>
+        </h1>
+    </header>);
+}
+
+//footer
+export default function  Footer(){
+    return(<footer  className="bg-white text-center mt-auto">
+        <div className="text-gray-400 text-center p-4">
+            2023 Copyright: <a className="text-gray-500" href="#"> Click & Cook</a>
+        </div>
+    </footer>);
+}
+//
+<Header/>
+<Footer/>
+
 "./Header":"./src/Header.tsx",
 "./Footer":"./src/Footer.tsx"
 
+-------------------------------------------------------------------------
 //pages
 //data.js
 export const recipes = [
@@ -63,10 +90,84 @@ export const recipes = [
     },
   ];
 
+// recipes
+export default function Recipes() {
+  console.log(recipes);
+  return (
+    <div className="my-4 px-4 text-center">
+      <h1 className="text-gray-600 text-xl mb-2">Recipes</h1>
+      <div className="grid grid-cols-3 gap-4">
+        {recipes.map(recipe => (
+          <Card
+            title={recipe.title}
+            slug={recipe.slug}
+            description={recipe.description}
+            image={recipe.image}
+            imageTitle={recipe.imageTitle}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Card({ title, slug, description, image, imageTitle }) {
+  return (
+    <div className="rounded-lg shadow-lg bg-white max-w-sm">
+      <Link to={`/recipes/${slug}`}>
+        <img title={imageTitle} src={image} alt={title}/>
+      </Link>
+      <div className="p-6">
+        <h2 className="text-gray-900 text-lg font-medium mb-2">{title}</h2>
+        <p className="text-gray-700">{description}</p>
+        <Link to={`/recipes/${slug}`} className="inline-block px-6 py-2 bg-blue-600 text-white font-medium text-xs  shadow-md">See Recipe</Link>
+      </div>
+    </div>
+  );
+}
+
+  // recipe
+  export default function Recipe() {
+  const { slug } = useParams();
+  const recipe = recipes.find(recipe => recipe.slug === slug);
+
+  return (
+    <div className="my-6 px-4 mx-auto grid gap-4 grid-cols-2">
+      <div>
+        <img src={recipe.image} title={recipe.imageTitle} className="w-50 h-50" />
+      </div>
+      <div>
+        <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 mb-2">{recipe.title}</h1>
+        <p>{recipe.description}</p>
+      </div>
+    </div>
+  )
+}
+
+//
+<BrowserRouter>
+    <Routes>
+        <Route path="/" element={<Recipes />} />
+        <Route path="/recipes/:slug" element={<Recipe />} />
+    </Routes>
+</BrowserRouter>
+
 "./Recipes": "./src/Recipes.tsx",
 "./Recipe": "./src/Recipe.tsx",
 
+-----------------------------------------------------------
 //host
+
+ <div className="flex flex-col min-h-screen">
+    <Header />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Recipes />} />
+          <Route path="/recipes/:slug" element={<Recipe />} />
+        </Routes>
+      </BrowserRouter>
+    <Footer />
+  </div>
 layout: "layout@http://localhost:3001/remoteEntry.js",
 pages: "pages@http://localhost:3002/remoteEntry.js",
 

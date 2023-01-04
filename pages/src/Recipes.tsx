@@ -10,7 +10,6 @@ export default function Recipes() {
       <div className="grid grid-cols-3 gap-4">
         {recipes.map(recipe => (
           <Card
-            key={recipe.slug}
             title={recipe.title}
             slug={recipe.slug}
             description={recipe.description}
